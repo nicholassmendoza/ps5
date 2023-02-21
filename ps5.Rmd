@@ -87,8 +87,16 @@ max(gm$time, na.rm = TRUE)
 ## Part 3: CO2 emissions
 1. (2pt) How many missing co2 emissions are there for each year? Analyze both missing CO2
 and co2_PC. Which years have most missing data?
+
+
 ```{r}
+gm %>% 
+  filter(is.na(co2_PC), is.na(co2)) %>% 
+  group_by(time) %>% 
+  summarise(years = n()) %>% 
+  arrange(desc(years))
 ```
+2017, 2018, and 2019 have the most missing co2 emissions.
 
 2. (5pt) Make a plot of total CO2 emissions over time for the U.S, China, and India. Add a few
 more countries of your choice. Explain what do you see.
@@ -277,5 +285,26 @@ bit. But we also have more countries in 2019–what about the relative rank divi
 corresponding number of countries that have LE data in the corresponding year?
 Hint: 0.0904 for 1960.
 
+1960 relative rank
+```{r}
+gm %>% 
+  filter(!is.na(lifeExpectancy), time == "1960", !is.na(region)) %>% 
+  mutate(rank = rank(-lifeExpectancy), number_country = n(), relativerank = rank/number_country) %>% 
+  select(name, rank, number_country, relativerank) %>% 
+  filter(name == "United States of America") %>% 
+  select(relativerank)
+```
 
+2019 relative rank
+```{r}
+gm %>% 
+  filter(!is.na(lifeExpectancy), time == "2019", !is.na(region)) %>% 
+  mutate(rank = rank(-lifeExpectancy), number_country = n(), relativerank = rank/number_country) %>% 
+  select(name, rank, number_country, relativerank) %>% 
+  filter(name == "United States of America") %>% 
+  select(relativerank)
+```
 
+Finally tell us how many hours did you spend on this PS.
+
+6 hours
